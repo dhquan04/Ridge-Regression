@@ -1,29 +1,101 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-    <title>Gas Price Predictor</title>
+    <meta charset="UTF-8">
+    <title>Dự đoán giá gas Ethereum</title>
+
+    <style>
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(to bottom right, #1b2735, #090a0f);
+            color: #ffffff;
+            text-align: center;
+            padding-top: 80px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        #container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            padding: 35px;
+            width: 450px;
+            margin: auto;
+            border-radius: 15px;
+            box-shadow: 0px 4px 20px rgba(0,0,0,0.4);
+        }
+
+        button {
+            background: #00c6ff;
+            background: linear-gradient(90deg, #00c6ff 0%, #0072ff 100%);
+            color: white;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.25s;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #0072ff 0%, #00c6ff 100%);
+            transform: scale(1.06);
+        }
+
+        #result {
+            margin-top: 25px;
+            font-size: 20px;
+            white-space: pre-line;
+            line-height: 1.6;
+            color: #e0eaff;
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 14px;
+            color: #cccccc;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>Dự đoán giá gas Ethereum sau 1 phút</h1>
-    <button onclick="predictGas()">Dự đoán ngay</button>
-    <p id="result"></p>
 
-    <script>
-        function predictGas() {
-            fetch("/predict")
-                .then(response => response.json())
-                .then(data => {
-                    if (data.predicted_gas_gwei) {
-                        document.getElementById("result").innerText =
-                            "Giá gas hiện tại: " + data.current_gas_gwei.toFixed(4) + " Gwei\n" +
-                            "Giá gas dự đoán sau 1 phút: " + data.predicted_gas_gwei.toFixed(4) + " Gwei";
-                    } else {
-                        document.getElementById("result").innerText =
-                            "Có lỗi xảy ra: " + JSON.stringify(data);
-                    }
-                });
-        }
-    </script>
+<div id="container">
+    <h1>Dự đoán giá gas Ethereum sau 1 phút</h1>
+    <button onclick="predictGas()">🔥 Dự đoán ngay</button>
+    <p id="result">Nhấn nút để xem dự đoán mới nhất…</p>
+</div>
+
+<p class="footer">Powered by Ridge Model — Ethereum On-Chain Gas Predictor</p>
+
+<script>
+    function predictGas() {
+        document.getElementById("result").innerText = "⏳ Đang lấy dữ liệu...";
+        
+        fetch("/predict")
+            .then(response => response.json())
+            .then(data => {
+                if (data.predicted_gas_gwei) {
+                    document.getElementById("result").innerText =
+                        "💠 Giá gas hiện tại: " + data.current_gas_gwei.toFixed(4) + " Gwei\n" +
+                        "🚀 Giá gas dự đoán sau 1 phút: " + data.predicted_gas_gwei.toFixed(4) + " Gwei";
+                } else {
+                    document.getElementById("result").innerText =
+                        "❌ Có lỗi xảy ra:\n" + JSON.stringify(data);
+                }
+            })
+            .catch(err => {
+                document.getElementById("result").innerText =
+                    "⚠ Lỗi kết nối tới server!\n" + err;
+            });
+    }
+</script>
 
 </body>
 </html>
