@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gas Price Predictor</title>
+</head>
+<body>
+    <h1>Dự đoán giá gas Ethereum sau 1 phút</h1>
+    <button onclick="predictGas()">Dự đoán ngay</button>
+    <p id="result"></p>
+
+    <script>
+        function predictGas() {
+            fetch("/predict")
+                .then(response => response.json())
+                .then(data => {
+                    if (data.predicted_gas_gwei) {
+                        document.getElementById("result").innerText =
+                            "Giá gas hiện tại: " + data.current_gas_gwei.toFixed(4) + " Gwei\n" +
+                            "Giá gas dự đoán sau 1 phút: " + data.predicted_gas_gwei.toFixed(4) + " Gwei";
+                    } else {
+                        document.getElementById("result").innerText =
+                            "Có lỗi xảy ra: " + JSON.stringify(data);
+                    }
+                });
+        }
+    </script>
+
+</body>
+</html>
